@@ -1,6 +1,7 @@
 import os
 from datetime import datetime, date
-
+'''This is Issue-1, this is for practiceing version control via git. 
+   I have change the function name reg_user to add_new_user,and list name task_list to list_of_task.'''
 DATETIME_STRING_FORMAT = "%Y-%m-%d"
 
 # Create tasks.txt if it doesn't exist
@@ -14,7 +15,7 @@ with open("tasks.txt", 'r') as task_file:
     task_data = [t for t in task_data if t != ""]
 
 
-task_list = []
+list_of_task = []
 for t_str in task_data:
     curr_t = {}
     # Save tasks as a list and split them by semicolon and manually add each component
@@ -25,7 +26,7 @@ for t_str in task_data:
     curr_t['due_date'] = datetime.strptime(task_components[3], DATETIME_STRING_FORMAT)
     curr_t['assigned_date'] = datetime.strptime(task_components[4], DATETIME_STRING_FORMAT)
     curr_t['completed'] = True if task_components[5] == "Yes" else False
-    task_list.append(curr_t)
+    list_of_task.append(curr_t)
 
 
 #====Login Section====
@@ -64,7 +65,7 @@ while not logged_in:
         logged_in = True
 
 #function for user registration#
-def reg_user(a):  #a is userinput
+def add_new_user(a):  #a is userinput
     '''This function take userinput and check if the name has already in use, 
     and only do password confirmation after ensure the name is not in use.'''
     user_avaliable=False  
@@ -89,7 +90,7 @@ def reg_user(a):  #a is userinput
                 out_file.write("\n".join(user_data))
         else:
             print("Passwords do no match")
-#function reg_user end#
+#function add_new_user end#
 #function for add task#
 def add_task(a): # a is username
     '''This fuction take username and task details and save it to task.txt.'''
@@ -113,10 +114,10 @@ def add_task(a): # a is username
             "assigned_date": curr_date,
             "completed": False
         }
-    task_list.append(new_task)
+    list_of_task.append(new_task)
     with open("tasks.txt", "w") as task_file:
-        task_list_to_write = []
-        for t in task_list:
+        list_of_task_to_write = []
+        for t in list_of_task:
             str_attrs = [
                     t['username'],
                     t['title'],
@@ -125,8 +126,8 @@ def add_task(a): # a is username
                     t['assigned_date'].strftime(DATETIME_STRING_FORMAT),
                     "Yes" if t['completed'] else "No"
                 ]
-            task_list_to_write.append(";".join(str_attrs))
-        task_file.write("\n".join(task_list_to_write))
+            list_of_task_to_write.append(";".join(str_attrs))
+        task_file.write("\n".join(list_of_task_to_write))
     print("Task successfully added.")
 #function end#
 #function for view mine #
@@ -137,15 +138,15 @@ def mark_completed(a): # a is task_selected(int)
     tasknum=0
     mark_as_complete={}
     j=""
-    for i in range (len(task_list)):
-        if task_list[i]['username']==curr_user:
+    for i in range (len(list_of_task)):
+        if list_of_task[i]['username']==curr_user:
             tasknum+=1
             if tasknum==a:
                 j=int(i)
-                mark_as_complete=task_list[j]
+                mark_as_complete=list_of_task[j]
     mark_as_complete['completed']=True
 
-    task_list[j]=mark_as_complete
+    list_of_task[j]=mark_as_complete
 #=================================================
 #sub-function for VM : editing tasks
 def edit_task(a): #a is task selected
@@ -153,12 +154,12 @@ def edit_task(a): #a is task selected
     tasknum=0
     edit_item={}
     j=""
-    for i in range (len(task_list)):
-        if task_list[i]['username']==curr_user:
+    for i in range (len(list_of_task)):
+        if list_of_task[i]['username']==curr_user:
             tasknum+=1
             if tasknum==a:
                 j=int(i)
-                edit_item=task_list[j]
+                edit_item=list_of_task[j]
     edit_item['username']= input("Please input taskowner: ")
     while True:
         try:
@@ -166,20 +167,20 @@ def edit_task(a): #a is task selected
             break
         except ValueError:
             print("Invalid datetime format. Please use the format specified")    
-    task_list[j]=edit_item
+    list_of_task[j]=edit_item
 #============================================
 #sub-function for VM : write back
 def writeback():
     '''This function write the tasks back to task.txt.'''
     task_item=[]
     content_to_write=""
-    for i in range (len(task_list)):
-        content_to_write=task_list[i]['username']+";"
-        content_to_write+=task_list[i]['title']+";"
-        content_to_write+=task_list[i]['description']+";"
-        content_to_write+=task_list[i]['due_date'].strftime(DATETIME_STRING_FORMAT)+";"
-        content_to_write+=task_list[i]['assigned_date'].strftime(DATETIME_STRING_FORMAT)+";"
-        content_to_write+= "Yes"if task_list[i]['completed'] else "No"
+    for i in range (len(list_of_task)):
+        content_to_write=list_of_task[i]['username']+";"
+        content_to_write+=list_of_task[i]['title']+";"
+        content_to_write+=list_of_task[i]['description']+";"
+        content_to_write+=list_of_task[i]['due_date'].strftime(DATETIME_STRING_FORMAT)+";"
+        content_to_write+=list_of_task[i]['assigned_date'].strftime(DATETIME_STRING_FORMAT)+";"
+        content_to_write+= "Yes"if list_of_task[i]['completed'] else "No"
         task_item.append(content_to_write)
         content_to_write=""
 
@@ -187,7 +188,7 @@ def writeback():
         for i in task_item:
             file.write("%s\n"% i)
 #=================================================
-def view_mine(a): #a is task_list
+def view_mine(a): #a is list_of_task
     '''This function contains functions (mark_completed, edit_task and writeback), 
     it allows users to choose the task they are assigned and see if they wish to mark as complete or edit task,
      then save it back to task.txt.'''
@@ -225,11 +226,11 @@ def view_mine(a): #a is task_list
                 elif choose==2:
                     tasknum=0
                     check={}
-                    for i in range (len(task_list)):
-                        if task_list[i]['username']==curr_user:
+                    for i in range (len(list_of_task)):
+                        if list_of_task[i]['username']==curr_user:
                             tasknum+=1
                             if tasknum==task_selected:
-                                check=task_list[i]
+                                check=list_of_task[i]
                     while True:
                         try:
                             if check['completed']==True:
@@ -252,7 +253,7 @@ def view_mine(a): #a is task_list
         print("Error! Please put in CORRECT NUMER!")
 #function end
 #function for generate task overview
-def task_overview(a):#a is task_list
+def task_overview(a):#a is list_of_task
     '''This function provide a aummary of tasks in task_overview.txt. '''
     total_task=len(a)
     complete=0
@@ -280,7 +281,7 @@ def task_overview(a):#a is task_list
             file.write(i)
 #=====================================================================
 #function for generate user overview
-def user_overview(a,b): #a is task_list, b is username
+def user_overview(a,b): #a is list_of_task, b is username
     '''This function provide an overview of the tasks that each user own and the status.'''
     task_assigned=0
     total_tasks=len(a)
@@ -321,7 +322,7 @@ e - Exit
 
     if menu == 'r':
         new_username = input("New Username: ").lower()
-        reg_user(new_username)
+        add_new_user(new_username)
 
     elif menu == 'a':
         task_username=input("Name of person assigned to task: ")
@@ -336,7 +337,7 @@ e - Exit
 
     elif menu == 'va':
         '''Showing all tasks.'''
-        for t in task_list:
+        for t in list_of_task:
             disp_str = f"Task: \t\t {t['title']}\n"
             disp_str += f"Assigned to: \t {t['username']}\n"
             disp_str += f"Date Assigned: \t {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
@@ -345,7 +346,7 @@ e - Exit
             print(disp_str)
 
     elif menu == 'vm':
-        view_mine(task_list)
+        view_mine(list_of_task)
 
     elif menu == 'gr':
         '''Generate reports task_overview.txt and user_overview.txt.'''
@@ -357,13 +358,13 @@ e - Exit
         for i in range (0,len(user),2):
             user_list.append(user[i])
             usernum=len(user_list)
-        task_overview(task_list)
+        task_overview(list_of_task)
         user_item=[]
         for i in range (len(user_list)):    
-            user_item.append(user_overview(task_list,user_list[i]))
+            user_item.append(user_overview(list_of_task,user_list[i]))
             with open ("User_overview.txt","w+")as file:
                 file.write(f"The total number of users: {len(user_list)}"+"\n")
-                file.write(f"The total number of tasks: {len(task_list)}"+"\n")
+                file.write(f"The total number of tasks: {len(list_of_task)}"+"\n")
                 file.write("="*80+"\n")
                 for i in user_item:
                     file.write(i)
@@ -382,13 +383,13 @@ e - Exit
             for i in range (0,len(user),2):
                 user_list.append(user[i])
                 usernum=len(user_list)
-            task_overview(task_list)
+            task_overview(list_of_task)
             user_item=[]
             for i in range (len(user_list)):    
-                user_item.append(user_overview(task_list,user_list[i]))
+                user_item.append(user_overview(list_of_task,user_list[i]))
                 with open ("User_overview.txt","w+")as file:                
                     file.write(f"The total number of users: {len(user_list)}"+"\n")
-                    file.write(f"The total number of tasks: {len(task_list)}"+"\n")
+                    file.write(f"The total number of tasks: {len(list_of_task)}"+"\n")
                     file.write("="*80+"\n")
                     for i in user_item:
                         file.write(i)
