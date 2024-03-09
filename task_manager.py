@@ -1,6 +1,6 @@
 import os
 from datetime import datetime, date
-
+'''This is issue 2, the view all function is replaced with display reports.'''
 DATETIME_STRING_FORMAT = "%Y-%m-%d"
 
 # Create tasks.txt if it doesn't exist
@@ -336,13 +336,10 @@ e - Exit
 
     elif menu == 'va':
         '''Showing all tasks.'''
-        for t in task_list:
-            disp_str = f"Task: \t\t {t['title']}\n"
-            disp_str += f"Assigned to: \t {t['username']}\n"
-            disp_str += f"Date Assigned: \t {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
-            disp_str += f"Due Date: \t {t['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
-            disp_str += f"Task Description: \n {t['description']}\n"
-            print(disp_str)
+        with open ("Task_overview.txt","r") as file:
+            content=file.read()
+            print(f"Tasks Overview: \n{content}")
+            print("="*80)
 
     elif menu == 'vm':
         view_mine(task_list)
